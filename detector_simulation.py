@@ -15,24 +15,6 @@ photon will turn into about 2000 electrons. The process of course is not fully d
 are many other sources of uncertainties and electron/charge loss mechanisms.
 """
 
-# def makeSpeckle(size, speckleSize = 4, gridSize = [2048,2048], detectorSize = [64,64]):
-#     '''
-#     Output: a speckle pattern of size "size" with the given speckle size
-#     '''
-#     image = np.zeros(size)
-#     speckleSize_grid = speckleSize*gridSize[0]/detectorSize[0]
-#     xPhasors = int(np.round(size[0]/speckleSize_grid))
-#     yPhasors = int(np.round(size[1]/speckleSize_grid))
-#     rndPhasor = np.zeros(size)
-#     rndPhasor[0:xPhasors,0:yPhasors] = np.exp(np.random.random([xPhasors,yPhasors])*2.j*np.pi)
-#     speckleField = np.fft.fft2(rndPhasor)
-#     speckleIntensity = np.abs(speckleField)**2
-#     return speckleIntensity/np.mean(speckleIntensity.flatten())
-
-def addIntensityVariation(speckle):
-    x,y = np.indices((speckle.shape))
-    b = y*1e-4+np.ones_like(x)
-    return speckle*b
 
 def makeSpeckle(size, speckleSize = 4, gridSize = [2048,2048], detectorSize = [64,64]):
     '''
@@ -46,7 +28,6 @@ def makeSpeckle(size, speckleSize = 4, gridSize = [2048,2048], detectorSize = [6
     rndPhasor[0:xPhasors,0:yPhasors] = np.exp(np.random.random([xPhasors,yPhasors])*2.j*np.pi)
     speckleField = np.fft.fft2(rndPhasor)
     speckleIntensity = np.abs(speckleField)**2
-    #speckleIntensity = addIntensityVariation(speckleIntensity)
     return speckleIntensity/np.mean(speckleIntensity.flatten())
 
 
@@ -147,14 +128,6 @@ def digitizeCharge(chargePattern, gain, chargePerADU=15, gainMap=None):
     """
     if gainMap is None:
         gainMap = np.random.randn(chargePattern.shape[0], chargePattern.shape[1])*gain+1
-#     if gain == 0.05:
-#         gainMap = np.load('gainMap0p05.npy')
-#     if gain == 0.03:
-#         gainMap = np.load('gainMap0p03.npy')
-#     if gain == 0.02:
-#         gainMap = np.load('gainMap0p02.npy')
-#     if gain == 0.06:
-#         gainMap = np.load('gainMap0p06.npy')
     return chargePattern*gainMap/chargePerADU
 
     
